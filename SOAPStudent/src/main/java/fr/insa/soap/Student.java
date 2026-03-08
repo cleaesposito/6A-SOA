@@ -11,7 +11,7 @@ public class Student {
     private String etablissement;
     private String filiere;
     private List<String> competences;
-    private List<LocalDateTime> disponibilites; //a changer pour que ce soit des dates 1 heures
+    private List<LocalDateTime> disponibilites;
     private double noteMoyenne;
 
     // Constructeur
