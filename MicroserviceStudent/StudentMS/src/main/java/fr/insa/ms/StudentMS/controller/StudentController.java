@@ -102,48 +102,56 @@ public class StudentController {
 	//creer etudiant
 	@PostMapping("/student")
 	public Student createStudent(@RequestBody Student student) {
-		Statement sStudent = null;
+
+		PreparedStatement sStudent = null;
 		PreparedStatement psCompetence = null;
 		PreparedStatement psDisponibilite = null;
 		Connection conn = null;
+		Student createdStudent = new Student(student.getNom(), student.getPrenom(), student.getEmail(), student.getEtablissement(), student.getFiliere(), student.getCompetences(), student.getDisponibilites(), student.getNoteMoyenne());
 
 		try {
 			conn = DriverManager.getConnection(url, login, pwd);
 
-			String cmdSt = "INSERT INTO student (id, nom, prenom, email, etablissement, filiere, note_moyenne) VALUES "
-					+ "("+student.getId() + ","
-					+ "'"+student.getNom()+"',"
-					+ "'"+student.getPrenom()+"',"
-							+ "'"+student.getEmail()+"',"
-					+ "'"+student.getEtablissement()+"',"
-					+ "'"+student.getFiliere()+"',"
-					+ ""+student.getNoteMoyenne()+");";
-			sStudent = conn.createStatement();
-			int resStudent = sStudent.executeUpdate(cmdSt);
+			String cmdSt = "INSERT INTO student (nom, prenom, email, etablissement, filiere, note_moyenne) VALUES (?,?,?,?,?,?) ";
+			sStudent = conn.prepareStatement(cmdSt,Statement.RETURN_GENERATED_KEYS);			
+			sStudent.setString(1, student.getNom());
+			sStudent.setString(2, student.getPrenom());
+			sStudent.setString(3, student.getEmail());
+			sStudent.setString(4, student.getEtablissement());
+			sStudent.setString(5, student.getFiliere());
+			sStudent.setDouble(6, student.getNoteMoyenne());
+			int resStudent = sStudent.executeUpdate();
 
-			if (resStudent >0) {
+			ResultSet generatedKeys = sStudent.getGeneratedKeys();
+			if (resStudent >0 && generatedKeys.next()) {
+
+				int newId = generatedKeys.getInt(1);
+				createdStudent.setId(newId);
+
 				String cmdCompetence = "INSERT INTO student_competence (id, competence) VALUES (?, ?)";
 
-		        psCompetence = conn.prepareStatement(cmdCompetence);
+				psCompetence = conn.prepareStatement(cmdCompetence);
 
-		        for (String comp : student.getCompetences()) {
+				for (String comp : student.getCompetences()) {
 
-		            psCompetence.setInt(1, student.getId());
-		            psCompetence.setString(2, comp);
-		            psCompetence.executeUpdate();
-		        }
+					psCompetence.setInt(1, newId);
+					psCompetence.setString(2, comp);
+					psCompetence.executeUpdate();
+				}
 
-		       
-		        String cmdDisponibilite = "INSERT INTO student_disponibilite (id, disponibilite) VALUES (?, ?)";
 
-		        psDisponibilite = conn.prepareStatement(cmdDisponibilite);
+				String cmdDisponibilite = "INSERT INTO student_disponibilite (id, disponibilite) VALUES (?, ?)";
 
-		        for (LocalDateTime dispo : student.getDisponibilites()) {
+				psDisponibilite = conn.prepareStatement(cmdDisponibilite);
+				System.out.println("disp ok");
 
-		            psDisponibilite.setInt(1, student.getId());
-		            psDisponibilite.setTimestamp(2, Timestamp.valueOf(dispo));
-		            psDisponibilite.executeUpdate();
-		        }
+
+				for (LocalDateTime dispo : student.getDisponibilites()) {
+
+					psDisponibilite.setInt(1, newId);
+					psDisponibilite.setTimestamp(2, Timestamp.valueOf(dispo));
+					psDisponibilite.executeUpdate();
+				}
 
 				System.out.println("student added: "+ student);
 			} else {
@@ -164,22 +172,22 @@ public class StudentController {
 			}
 		}
 
-		return student;
+		return createdStudent;
 	}
-	
+
 	@GetMapping("/student")
 	public List<Student> getAllStudents() {
 		List<Student> s = new ArrayList<>();
 		//non implementee
 		return s;
 	}
-	
+
 	@PutMapping("/student/{id}")
 	public Student editStudent(@RequestBody Student student) {
 		//non implementee
 		return student;
 	}
-	
+
 	@DeleteMapping("/student/{id}")
 	public Student deleteStudent(@RequestBody Student student) {
 		//non implementee

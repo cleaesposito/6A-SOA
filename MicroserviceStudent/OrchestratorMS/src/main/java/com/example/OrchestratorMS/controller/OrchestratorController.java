@@ -1,13 +1,13 @@
 package com.example.OrchestratorMS.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+
+import com.example.OrchestratorMS.model.Auth;
 import com.example.OrchestratorMS.model.Request;
 import com.example.OrchestratorMS.model.SignInInfo;
 import com.example.OrchestratorMS.model.SignUpInfo;
@@ -60,17 +60,11 @@ public class OrchestratorController {
 
 		try {
 
-			//TODO : creer user student sans ID cf Tibo creer constr vide, set le rest, param db pour que autoincremente, voir comment ils recuperent le body du student pourpasser en param de auth
-			//Student student = new Student();
-
-			//ajouter student a la database
-			//Student stCreated = restTemplate.postForObject("http://StudentMS/student", student, Student.class);
-
-			//TODO : creer auth sans ID
-			//Auth auth = new Auth();
-
-			//Auth authCreated = restTemplate.postForObject("http://AuthMS/auth", auth, Auth.class);
-			return "User successfully created :";//+student + auth quand ils seront crees
+			Student student = new Student(info.getNom(), info.getPrenom(), info.getEmail(), info.getEtablissement(), info.getFiliere(), info.getCompetences(), info.getDisponibilites(), 5);
+			Student stCreated = restTemplate.postForObject("http://StudentMS/student", student, Student.class);
+			Auth auth = new Auth(stCreated.getId(), info.getEmail(), info.getPassword());
+			restTemplate.postForObject("http://AuthMS/auth", auth, Auth.class);
+			return "User successfully created : " + stCreated;
 
 		} catch (Exception e) {
 			e.printStackTrace();

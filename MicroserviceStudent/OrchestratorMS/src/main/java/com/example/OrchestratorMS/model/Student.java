@@ -13,11 +13,26 @@ public class Student {
 	private List<String> competences;
 	private List<LocalDateTime> disponibilites;
 	private double noteMoyenne;
+	
+	public Student () {}
 
 	public Student(int id, String nom, String prenom, String email, String etablissement, String filiere,
 			List<String> competences, List<LocalDateTime> disponibilites, double noteMoyenne) {
 		super();
 		this.id = id;
+		this.nom = nom;
+		this.prenom = prenom;
+		this.email = email;
+		this.etablissement = etablissement;
+		this.filiere = filiere;
+		this.competences = competences;
+		this.disponibilites = disponibilites;
+		this.noteMoyenne = noteMoyenne;
+	}
+	
+	public Student(String nom, String prenom, String email, String etablissement, String filiere,
+			List<String> competences, List<LocalDateTime> disponibilites, double noteMoyenne) {
+		super();
 		this.nom = nom;
 		this.prenom = prenom;
 		this.email = email;

@@ -21,6 +21,18 @@ public class Request {
 		this.date = date;
 		this.status = status;
 	}
+	public Request(){}
+	
+	public Request(String title, String description, int demanderId, int helperId, LocalDateTime date,
+			EnumStatus status) {
+		super();
+		this.title = title;
+		this.description = description;
+		this.demanderId = demanderId;
+		this.helperId = helperId;
+		this.date = date;
+		this.status = status;
+	}
 	public int getId() {
 		return id;
 	}

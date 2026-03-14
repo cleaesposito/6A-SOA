@@ -2,6 +2,7 @@ package fr.insa.ms.RequestMS.model;
 
 import java.time.LocalDateTime;
 
+
 public class Request {
 	private int id;
 	private String title;
@@ -14,6 +15,19 @@ public class Request {
 			EnumStatus status) {
 		super();
 		this.id = id;
+		this.title = title;
+		this.description = description;
+		this.demanderId = demanderId;
+		this.helperId = helperId;
+		this.date = date;
+		this.status = status;
+	}
+
+	public Request(){}
+
+	public Request(String title, String description, int demanderId, int helperId, LocalDateTime date,
+			EnumStatus status) {
+		super();
 		this.title = title;
 		this.description = description;
 		this.demanderId = demanderId;
@@ -63,5 +77,5 @@ public class Request {
 	public void setStatus(EnumStatus status) {
 		this.status = status;
 	}	
-	
+
 }
