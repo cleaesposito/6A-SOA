@@ -33,7 +33,7 @@ public class ReviewController {
 		//non implementee
 		return null;
 	}
-	@PostMapping("/review")
+	@PostMapping("/review/{id}")
 	public Review createReview(@RequestBody Review review) {
 		//non implementee
 		return review;

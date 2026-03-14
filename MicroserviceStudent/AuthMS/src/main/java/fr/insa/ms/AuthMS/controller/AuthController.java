@@ -57,42 +57,42 @@ public class AuthController {
 
 		return a;
 	}
-	
+
 	//Obtenir password d'un etudiant a partir du mail
-		@GetMapping("/auth/email/{email}")
-		public String getPassword(@PathVariable String email) {
-			Auth a = null;
-			ResultSet res = null;
-			Statement s = null;
-			Connection conn = null;
-			String passwd = "";
+	@GetMapping("/auth/email/{email}")
+	public String getPassword(@PathVariable String email) {
+		Auth a = null;
+		ResultSet res = null;
+		Statement s = null;
+		Connection conn = null;
+		String passwd = "";
 
-			try {
-				conn = DriverManager.getConnection(url, login, pwd);
+		try {
+			conn = DriverManager.getConnection(url, login, pwd);
 
-				String cmd = "SELECT password FROM auth WHERE email = '"+email+"';";
-				s = conn.createStatement();
-				res = s.executeQuery(cmd);
+			String cmd = "SELECT password FROM auth WHERE email = '"+email+"';";
+			s = conn.createStatement();
+			res = s.executeQuery(cmd);
 
-				if (res.next()) {
-					passwd = res.getString("password");
-					System.out.println("pwd : "+ passwd);
-				}
-
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} finally {
-				try {
-					if (res != null) res.close();
-					if (s != null) s.close();
-					if (conn != null) conn.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+			if (res.next()) {
+				passwd = res.getString("password");
+				System.out.println("pwd : "+ passwd);
 			}
 
-			return passwd;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (res != null) res.close();
+				if (s != null) s.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
+
+		return passwd;
+	}
 
 	//creer infos d'authentification d'un etudiant
 	@PostMapping("/auth")

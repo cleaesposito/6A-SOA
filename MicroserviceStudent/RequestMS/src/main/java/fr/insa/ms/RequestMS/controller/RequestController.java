@@ -90,7 +90,7 @@ public class RequestController {
 		return request;
 	}
 	
-	@DeleteMapping("/student/{id}")
+	@DeleteMapping("/request/{id}")
 	public Request deleteRequest(@PathVariable int id) {
 		//non implementee
 		return null;
